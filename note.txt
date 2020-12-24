@@ -1,0 +1,57 @@
+API
+------------
+- Application Programming Interface
+
+- မတူညီတဲ့ app နှစ်ခုက data တွေကို share သုံးတာမျိုး (for eg: tiktok မှာ login ဝင်မဲ့ case မျိုးဆိုရင် သူကိုယ်တိုင် login 	   platform ကို မထားဘဲနဲ့ facebook ရဲ့ ရှိပြီး login ရဲ့အကူအညီ ယူ ချိတ်ဆတ်ပြီး ခေါ်သုံးလိုက်တာမျိုး)
+
+- api က data တွေကို programming langauage တိုင်းက နားလည်နိုင်တဲ့ json, xml format တွေပဲ ထုတ်ပေးလိုက်တာ, ပြီးကျမှ ui ပိုင်းမှာ ကြိုက်တဲ့ version, language (mobile, ios, ..) တွေမှာ json data တွေနဲ့ ပြလိုက်ရုံပဲ.
+
+
+
+1. To create API controller
+   > php artisan make:controller CategoryController --api
+
+
+2. To create API controller attached with model
+   > php artisan make:controller CategoryController --api --model=Category
+
+
+
+
+******* အဲလို data တွေကို ထုတ်တဲ့အခါမှာ database name တွေကို အမှန် မပြချင်ရင် api resource ကိုသုံး *********
+
+- To hide the db field names from the client use API Resource ==> laravel api resource (ref [ https://laravel.com/docs/7.x/eloquent-resources ])
+
+	> php artisan make:resource UserResource
+
+
+
+******* API Authentication *******
+>>>>> APIs typically use tokens to authenticate users and do not maintain session state between requests. Laravel makes API authentication a breeze using " Laravel Passport "
+
+------ Web မှာ auth ကို session နဲ့ သယ်တယ်။
+------ API မှာ auth ကို token နဲ့ သယ်တယ်။ API auth အတွက် Laravel Passport ကို သုံးရမယ်။
+
+>>>>> ref [  https://laravel.com/docs/7.x/passport#introduction ]
+
+1. install laravel passport
+	> composer require laravel/passport "~9.0"
+	> php artisan migrate
+	> php artisan passport:install
+
+2. add User.php
+-------------------------------------------
+	use Laravel\Passport\HasApiTokens;
+
+	class User extends Authenticatable
+	{
+	    use HasApiTokens, Notifiable;
+	}
+
+3. add these lines in AuthServiceProvider
+---------------------------------------------
+	Passport::routes();
+
+4. repair config/auth.php
+-------------------------------------
+	'driver' => 'passport',
